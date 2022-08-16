@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TableCreateStream from "./TableCreateStream";
-import {loadCurrentData} from "../utils/interact";
+import { loadCurrentData } from "../utils/interact";
 
 const SearchPage = () => {
   const [data, setData] = useState([]);
@@ -8,47 +8,42 @@ const SearchPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [searchBy, setSearchBy] = useState("");
-  
-  const handleSearchBy = (event) => setSearchBy(event.target.value)
 
+  const handleSearchBy = (event) => setSearchBy(event.target.value);
   const handleIndexParam = (event) => setIndexParam(event.target.value);
   const handleStartDate = (event) => setStartDate(event.target.value);
   const handleEndDate = (event) => setEndDate(event.target.value);
 
-  
-  
   const getDataFor = (event) => {
     event.preventDefault();
-    let searchOption = ` ${searchBy} : "${sIndexParam}"` 
-    console.log(' get Data option ->',searchOption)
-   
-    const message = loadCurrentData(searchBy,sIndexParam, startDate, endDate).then(
-      (value) => setData(value)
-    );
+    const loadData = loadCurrentData(
+      searchBy,
+      sIndexParam,
+      startDate,
+      endDate
+    ).then((value) => setData(value));
   };
 
   return (
     <div>
-      {console.log(data)}
       {/* Input Area */}
-       
-      
       <form>
         <div className="flex">
           <select
             id="small"
             data-dropdown-toggle="dropdown"
             className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300  hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-            defaultValue={'DEFAULT'}
+            defaultValue={"DEFAULT"}
             onChange={handleSearchBy}
-       
-         >
-            <option value="DEFAULT" disabled >Search By </option>
+          >
+            <option value="DEFAULT" disabled>
+              Search By{" "}
+            </option>
             <option value={"streamId"}>Steam Id</option>
             <option value={"sender"}>Sender</option>
             <option value={"recipient"}>Recipient</option>
           </select>
-         
+
           <div className="relative w-full">
             <input
               type="search"
@@ -58,7 +53,6 @@ const SearchPage = () => {
               required=""
               onChange={handleIndexParam}
               value={sIndexParam}
-              
             />
 
             <button
@@ -85,8 +79,8 @@ const SearchPage = () => {
             </button>
           </div>
         </div>
-      </form>     
- 
+      </form>
+
       {/* date picker */}
       <div className="flex items-center">
         <div className="relative">
