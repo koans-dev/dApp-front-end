@@ -1,41 +1,74 @@
 import React, { useState } from "react";
 import TableCreateStream from "./TableCreateStream";
-import { loadCurrentData } from "../utils/interact";
+import {loadCurrentData} from "../utils/interact";
 
 const SearchPage = () => {
   const [data, setData] = useState([]);
   const [sIndexParam, setIndexParam] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [searchBy, setSearchBy] = useState("");
+  
+  const handleSearchBy = (event) => setSearchBy(event.target.value)
 
   const handleIndexParam = (event) => setIndexParam(event.target.value);
   const handleStartDate = (event) => setStartDate(event.target.value);
   const handleEndDate = (event) => setEndDate(event.target.value);
 
+  
+  
   const getDataFor = (event) => {
     event.preventDefault();
-    const message = loadCurrentData(sIndexParam, startDate, endDate).then(
+    let searchOption = ` ${searchBy} : "${sIndexParam}"` 
+    console.log(' get Data option ->',searchOption)
+   
+    const message = loadCurrentData(searchBy,sIndexParam, startDate, endDate).then(
       (value) => setData(value)
     );
   };
 
   return (
     <div>
-      {" "}
+      {console.log(data)}
       {/* Input Area */}
-      <div>
-        <form>
-          <label
-            htmlFor="default-search"
-            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
-          >
-            Search
-          </label>
-          <div className="relative">
-            <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+       
+      
+      <form>
+        <div className="flex">
+          <select
+            id="small"
+            data-dropdown-toggle="dropdown"
+            className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300  hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+            defaultValue={'DEFAULT'}
+            onChange={handleSearchBy}
+       
+         >
+            <option value="DEFAULT" disabled >Search By </option>
+            <option value={"streamId"}>Steam Id</option>
+            <option value={"sender"}>Sender</option>
+            <option value={"recipient"}>Recipient</option>
+          </select>
+         
+          <div className="relative w-full">
+            <input
+              type="search"
+              id="search-dropdown"
+              className="block p-2.5 w-full z-20 text-sm text-gray-900 focus:outline-0 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-500 focus:border-green-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-green-500"
+              placeholder="Search Steam Id,Sender Recipient..."
+              required=""
+              onChange={handleIndexParam}
+              value={sIndexParam}
+              
+            />
+
+            <button
+              type="button"
+              onClick={getDataFor}
+              className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-green-500 rounded-r-lg border  border-green-700 hover:bg-green-100 focus:ring-0 focus:outline-none focus:ring-green-100 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
               <svg
                 aria-hidden="true"
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                className="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -48,28 +81,12 @@ const SearchPage = () => {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 ></path>
               </svg>
-            </div>
-            <div className="grid  grid-cols-1 grid-rows-1">
-              <input
-                type="search"
-                onChange={handleIndexParam}
-                id="default-search"
-                className=" p-4 pl-10 text-sm text-gray-900  border border-gray-300 focus:ring-green-500 focus:border-green-100 dark:placeholder-green-400 dark:text-green dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="Search by streamId..."
-                required
-                value={sIndexParam}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={getDataFor}
-              className="text-white absolute right-2.5 bottom-2.5 bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-600"
-            >
-              Search
+              <span className="sr-only">Search</span>
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>     
+ 
       {/* date picker */}
       <div className="flex items-center">
         <div className="relative">

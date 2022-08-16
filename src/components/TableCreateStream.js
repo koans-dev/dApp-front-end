@@ -5,7 +5,7 @@ const TableCreateStream = ({ data }) => {
     <div>
       {data.length > 0 ? (
         <table className="table-auto w-full text-sm text-left text-gray-300 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-gray-300">
+          <thead className="text-xs text-gray-700  bg-gray-100 dark:bg-gray-600 dark:text-gray-300">
             <tr>
               <th scope="col" className="py-3 px-6">
                 Stream Id
@@ -33,11 +33,11 @@ const TableCreateStream = ({ data }) => {
                   {item.returnValues.streamId}
                 </td>
                 <td className="py-2 px-5 dark:text-white">
-                  {item.returnValues.sender}
+                  {item.returnValues.sender.toLowerCase()}
                 </td>
 
                 <td className="py-2 px-5 dark:text-white">
-                  {item.returnValues.recipient}
+                  {item.returnValues.recipient.toLowerCase()}
                 </td>
 
                 <td className="py-2 px-5 dark:text-white">
