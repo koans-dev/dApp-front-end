@@ -16,7 +16,7 @@ export const loadCurrentData = async (searchBy, sIndexParam, sdate, edate) => {
   let opt;
   switch (searchBy) {
     case "streamId":
-      let toNumInxdParam = parseInt(sIndexParam);
+      let toNumInxdParam = parseInt(sIndexParam) ? sIndexParam : 0;
       opt = {
         filter: { streamId: toNumInxdParam },
         fromBlock: s_block.block,
