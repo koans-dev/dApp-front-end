@@ -8,6 +8,7 @@ const SearchPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [searchBy, setSearchBy] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearchBy = (event) => setSearchBy(event.target.value);
   const handleIndexParam = (event) => setIndexParam(event.target.value);
@@ -16,17 +17,27 @@ const SearchPage = () => {
 
   const getDataFor = (event) => {
     event.preventDefault();
-    const loadData = loadCurrentData(
-      searchBy,
-      sIndexParam,
-      startDate,
-      endDate
-    ).then((value) => setData(value));
+    if (startDate === "" || endDate === "") {
+      setErrorMessage("Please select start and end date");
+    } else {
+      loadCurrentData(searchBy, sIndexParam, startDate, endDate).then((value) =>
+        setData(value)
+      );
+      setErrorMessage("");
+    }
   };
 
   return (
     <div>
       {/* Input Area */}
+      {errorMessage && (
+        <div
+          className="p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800"
+          role="alert"
+        >
+          <span className="font-medium">{errorMessage}</span>
+        </div>
+      )}
       <form>
         <div className="flex">
           <select
@@ -39,7 +50,7 @@ const SearchPage = () => {
             <option value="DEFAULT" disabled>
               Search By{" "}
             </option>
-            <option value={"streamId"}>Steam Id</option>
+            <option value={"streamId"}>Stream Id</option>
             <option value={"sender"}>Sender</option>
             <option value={"recipient"}>Recipient</option>
           </select>
@@ -49,7 +60,7 @@ const SearchPage = () => {
               type="search"
               id="search-dropdown"
               className="block p-2.5 w-full z-20 text-sm text-gray-900 focus:outline-0 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-500 focus:border-green-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-green-500"
-              placeholder="Search Steam Id,Sender Recipient..."
+              placeholder="Search Stream Id,Sender,Recipient..."
               required=""
               onChange={handleIndexParam}
               value={sIndexParam}
@@ -83,7 +94,6 @@ const SearchPage = () => {
 
       {/* date picker */}
       <div className="flex items-center">
-        
         <div className="relative">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg
@@ -131,6 +141,7 @@ const SearchPage = () => {
             onChange={handleEndDate}
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Select date end"
+            required
           />
         </div>
       </div>
