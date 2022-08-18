@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TableCreateStream from "./TableCreateStream";
 import { loadCurrentData } from "../utils/interact";
+import Pagination from "./Pagination";
 
 const SearchPage = () => {
   const [data, setData] = useState([]);
@@ -10,6 +11,13 @@ const SearchPage = () => {
   const [searchBy, setSearchBy] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowPerPage, setRowPerPage] = useState(15);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const handleSearchBy = (event) => setSearchBy(event.target.value);
   const handleIndexParam = (event) => setIndexParam(event.target.value);
   const handleStartDate = (event) => setStartDate(event.target.value);
@@ -17,6 +25,7 @@ const SearchPage = () => {
 
   const getDataFor = (event) => {
     event.preventDefault();
+    setLoading(true);
     if (startDate === "" || endDate === "") {
       setErrorMessage("Please select start and end date");
     } else {
@@ -26,6 +35,10 @@ const SearchPage = () => {
       setErrorMessage("");
     }
   };
+
+  const indexOfLastRow = currentPage * rowPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowPerPage;
+  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <div>
@@ -38,6 +51,7 @@ const SearchPage = () => {
           <span className="font-medium">{errorMessage}</span>
         </div>
       )}
+
       <form>
         <div className="flex">
           <select
@@ -145,8 +159,17 @@ const SearchPage = () => {
           />
         </div>
       </div>
+
       {/* Table */}
-      <TableCreateStream data={data} />
+      <TableCreateStream data={currentRows} />
+
+      {data.length > 0 ? (
+        <Pagination
+          rowPerPage={rowPerPage}
+          totalRows={data.length}
+          paginate={paginate}
+        />
+      ) : null}
     </div>
   );
 };
